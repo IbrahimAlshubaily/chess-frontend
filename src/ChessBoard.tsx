@@ -1,8 +1,9 @@
 
 import {useState, useEffect} from 'react'
 
-const SERVER_URL = "http://localhost:8080";
 
+const SERVER_URL = "http://localhost:8080";
+const img = require('./assets/black-queen.png')
 export default function ChessBoard() : JSX.Element {
     const [chessBoard, setChessBoard] = useState(new Map<string, string>());
   
@@ -16,8 +17,9 @@ export default function ChessBoard() : JSX.Element {
     }
   
     function requestMove(e: React.MouseEvent<HTMLDivElement>) {
-      const row = Math.floor(e.clientX / 100);
-      const col = Math.floor(e.clientY / 100);
+      const row = Math.floor(e.clientY / 100);
+      const col = Math.floor(e.clientX / 100);
+      console.log(row, col, getPositionString(row,col));
       fetch(SERVER_URL, {
         method : "POST",
         mode: "no-cors",
@@ -26,19 +28,22 @@ export default function ChessBoard() : JSX.Element {
       }).then( res => console.log("POST response : "+res.status));
       fetchBoard();
     }
-  
-    const boardRows : JSX.Element[] = [];
+    const boardRows : JSX.Element[] = Array(8);
     for (let i = 0; i < 8; i++) {
-      const rowCells : JSX.Element[] = [];
+      const rowCells : JSX.Element[] = Array(8);
       for (let j = 0; j < 8; j++) {
-        let currCellRep: string = " ";
-        const currPosition = getPositionString(i, j)
+        const currPosition = getPositionString(j, i);
         if (chessBoard.has(currPosition)){
-          currCellRep = chessBoard.get(currPosition) as string;
+          const currCellRep = chessBoard.get(currPosition) as string;
+          
+          rowCells[j] = <div key={currPosition} className='gridCell' style={{backgroundImage:`url(/assets/${currCellRep}.png)` }}>
+            
+            </div>
+            continue;
         }
-        rowCells.push(<div id={currPosition} className='gridCell' onClick={requestMove}>{currCellRep}</div>)
+        rowCells[j] = <div key={currPosition} className='gridCell' onClick={requestMove}></div>;
       }
-      boardRows.push(<div id={i+""} className='boardRow'>{rowCells}</div>);
+      boardRows[i] = <div key={i+""} className='boardRow'>{rowCells}</div>;
     }
     return <div className='board'>{boardRows}</div>;
   }

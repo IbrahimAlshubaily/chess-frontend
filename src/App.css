@@ -4,15 +4,20 @@
 
 .board{
   display: flex;
+
 }
 
 .boardRow:nth-child(odd) .gridCell:nth-child(even), .boardRow:nth-child(even) .gridCell:nth-child(odd) {
-	background: burlywood;
+	background-color: burlywood;
+  
 }
 
 .gridCell {
   width: 100px;
   height: 100px;
   border: 0.025rem solid black;
-  background-color: #654321;
+  background-color: #845424;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
 }
